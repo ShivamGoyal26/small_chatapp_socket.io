@@ -5,13 +5,13 @@ const socketio = require("socket.io");
 
 app.use(express.static(__dirname + "/public"));
 
-const expressServer = app.listen(8001);
+const expressServer = app.listen(8002);
 const io = socketio(expressServer);
 
 io.on("connection", (socket) => {
   console.log(socket.id + "is connected!");
-  socket.emit("mesageFromServer", { data: "Welcome to the socket server" });
-  socket.on("mesageFromClient", (data) => {
-    console.log("data from client side", data);
+  socket.on("newMessageToServer", (dataFromClient) => {
+    // Here io will send the message to all the clients
+    io.emit("newMessageToClients", { text: dataFromClient.text });
   });
 });
